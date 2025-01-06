@@ -11,14 +11,21 @@ const handleSignUp = async (req, res) => {
             return res.status(409)
                 .json({ message: 'User is already exist, you can login', success: false });
         }
+        
         await User.create({
             name,
             email,
             password
         })
+        // const token = jwt.sign(
+        //     { email: user.email, _id: user._id },
+        //     secKey,
+        //     { expiresIn: '1h' }
+        // )
         res.status(201)
             .json({
                 message: "Signup successfully",
+                // token:token,
                 success: true
             })
     } catch (err) {
@@ -26,6 +33,7 @@ const handleSignUp = async (req, res) => {
             .json({
                 message: "Internal server errror",
                 success: false,
+                
                 err:err
             })
     }
@@ -41,7 +49,7 @@ const handleSignIn = async (req, res) => {
             return res.status(403)
                 .json({ message: errorMsg, success: false });
         }
-        const jwtToken = jwt.sign(
+        const token = jwt.sign(
             { email: user.email, _id: user._id },
             secKey,
             { expiresIn: '1h' }
@@ -51,7 +59,7 @@ const handleSignIn = async (req, res) => {
             .json({
                 message: "Login Success",
                 success: true,
-                jwtToken,
+                token:token,
                 email,
                 name: user.name
             })

@@ -2,10 +2,10 @@ import express from "express";
 import Document from "../model/document.js";
 import  { ensureAuthenticated } from "../middleware/Auth.js";
 
-const router = express.Router();
+const docroute = express.Router();
 
 // Get all documents for the logged-in user
-router.get('/', ensureAuthenticated, async (req, res) => {
+docroute.get('/', ensureAuthenticated, async (req, res) => {
     try {
         // const documents = await Document.find({ owner: req.user.id });
         const documents = await Document.find({});
@@ -16,7 +16,7 @@ router.get('/', ensureAuthenticated, async (req, res) => {
 });
 
 // Get a single document by ID
-router.get('/:id', ensureAuthenticated, async (req, res) => {
+docroute.get('/:id', ensureAuthenticated, async (req, res) => {
     try {
         const document = await Document.findById(req.params.id);
         if (!document) {
@@ -33,13 +33,14 @@ router.get('/:id', ensureAuthenticated, async (req, res) => {
 });
 
 // Create a new document
-router.post('/', ensureAuthenticated, async (req, res) => {
+docroute.post('/', ensureAuthenticated, async (req, res) => {
+    console.log(req.body);
     const { title, content } = req.body;
     try {
         const newDocument = await Document.create({
             title,
             content,
-            owner: req.user.id,
+            owner: req.user._id
         });
         res.json(newDocument);
     } catch (error) {
@@ -48,7 +49,7 @@ router.post('/', ensureAuthenticated, async (req, res) => {
 });
 
 // Update a document
-router.put('/:id', ensureAuthenticated, async (req, res) => {
+docroute.put('/:id', ensureAuthenticated, async (req, res) => {
     const { title, content } = req.body;
     try {
         const updatedDocument = await Document.findByIdAndUpdate(
@@ -63,7 +64,7 @@ router.put('/:id', ensureAuthenticated, async (req, res) => {
 });
 
 // Delete a document
-router.delete('/:id', ensureAuthenticated, async (req, res) => {
+docroute.delete('/:id', ensureAuthenticated, async (req, res) => {
     try {
         await Document.findByIdAndDelete(req.params.id);
         res.json({ message: 'Document deleted' });
@@ -72,4 +73,4 @@ router.delete('/:id', ensureAuthenticated, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default docroute;

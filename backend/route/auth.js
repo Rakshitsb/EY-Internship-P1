@@ -4,7 +4,7 @@ import {signupValidation,loginValidation} from "../middleware/AuthValidation.js"
 const awtRouter=express.Router();
 
 awtRouter.post("/register",signupValidation,handleSignUp);
-awtRouter.post("/signIn",loginValidation,handleSignIn);
+awtRouter.post("/login",loginValidation,handleSignIn);
 
 
 export default awtRouter;
